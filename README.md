@@ -5,7 +5,6 @@ This guide explains how to use a React & Vue for Design System starter powered b
 - 🏎 [Turborepo](https://turborepo.org) — High-performance build system for Monorepos.
 - 🚀 [React](https://reactjs.org/) — A JavaScript library for building user interfaces.
 - ⚡ [Vue](https://vuejs.org/) — An approachable, performant and versatile framework for building web user interfaces.
-- 🛠 [Tsup](https://github.com/egoist/tsup) — TypeScript bundler powered by esbuild.
 - 📖 [Storybook](https://storybook.js.org/) — A frontend workshop for building UI components and pages in isolation.
 
 As well as a few others tools preconfigured:
@@ -34,43 +33,24 @@ Using Turborepo simplifes managing your design system monorepo, as you can have 
 
 This Turborepo includes the following packages and applications:
 
-- `apps/showcase`: Empty folder, add your own app for landing or component showcase.
-- `apps/docs-react`: Storybook documentation for React library.
-- `apps/docs-vue`: Storybook documentation for Vue library.
-- `packages/core`: UI Core and shared utils.
+- `apps/showcase`: Astro component showcase.
+- `apps/storybook-react`: Storybook documentation for React library.
+- `apps/storybook-vue`: Storybook documentation for Vue library.
 - `packages/react-ui`: React Component library.
 - `packages/vue-ui`: Vue Component library.
 
-Yarn Workspaces enables us to "hoist" dependencies that are shared between packages to the root `package.json`. This means smaller `node_modules` folders and a better local dev experience. To install a dependency for the entire monorepo, use the `-W` workspaces flag with `yarn add`.
+Turnorepo enables us to "hoist" dependencies that are shared between packages to the root `package.json`. This means smaller `node_modules` folders and a better local dev experience.
 
 This example sets up your `.gitignore` to exclude all generated files, other folders like `node_modules` used to store your dependencies.
 
 ### Compilation
 
-To make the core library code work across all browsers, we need to compile the raw TypeScript and React code to plain JavaScript. We can accomplish this with `tsup`, which uses `esbuild` to greatly improve performance.
+To make the core library code work across all browsers, we need to compile the raw TypeScript, React and Vue code to plain JavaScript. We can accomplish this with `vite`, which is great to improve performance.
 
 Running `npm run build` from the root of the Turborepo will run the `build` command defined in each package's `package.json` file. Turborepo runs each `build` in parallel and caches & hashes the output to speed up future builds.
 
-For `react-ui`, the `build` command is the following:
 
-```bash
-tsup index.tsx --format esm,cjs --dts --external react
-```
-
-`tsup` compiles `src/index.tsx`, which exports all of the components in the design system, into both ES Modules and CommonJS formats as well as their TypeScript types. The `package.json` for `react-ui` then instructs the consumer to select the correct format:
-
-```json:react-ui/package.json
-{
-  "name": "react-ui",
-  "version": "0.0.0",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "sideEffects": false,
-}
-```
-
-Run `npm run build` to confirm compilation is working correctly. You should see a folder `acme-core/dist` which contains the compiled output.
+Run `npm run build` to confirm compilation is working correctly. You should see a `dist` folder in all packages, which contains the compiled output.
 
 ```bash
 acme-core
@@ -82,69 +62,93 @@ acme-core
 
 ## Components
 
-Based on `Atomic Design`, each file inside of `react-ui` is a component inside our design system. For example:
+Based on `Atomic Design`, each file inside of the libraries is a component inside our Design System. For example:
 
-```tsx:acme-core/src/Button.tsx
-import * as React from 'react';
+```tsx
+// react-ui/src/components/atoms/Button.tsx
 
-export interface ButtonProps {
-  children: React.ReactNode;
+import React from 'react';
+import type { ComponentProps, ReactNode } from 'react';
+import classNames from 'classnames/bind';
+import styles from './Button.module.scss';
+
+export interface ButtonProps extends ComponentProps<'button'>{
+    children?: ReactNode;
+    label?: string;
 }
 
-export function Button(props: ButtonProps) {
-  return <button>{props.children}</button>;
+export const Button = (props: ButtonProps) => {
+    const {
+        children,
+        type = 'primary',
+        label = 'React Button',
+        ...otherProps
+    } = props;
+
+    const cx = classNames.bind(styles);
+
+    return (
+        <button
+            className={cx('button')}
+            {...otherProps}
+        >
+            { children || label }
+        </button>
+    );
 }
 
-Button.displayName = 'Button';
+export default Button;
 ```
 
-When adding a new file, ensure the component is also exported from the entry `index.tsx` file:
+When adding a new component, ensure this is also exported from the entry `index.tsx` file:
 
-```tsx:acme-core/src/index.tsx
-import * as React from "react";
-export { Button, type ButtonProps } from "./Button";
+```tsx
+// react-ui/src/index.ts
+
+export * from "./atoms/Button/Button";
 // Add new component exports here
 ```
+
+This example applys to the Vue Library as well.
 
 ## Storybook
 
 Storybook provides us with an interactive UI playground for our components. This allows us to preview our components in the browser and instantly see changes when developing locally. This example preconfigures Storybook to:
 
 - React use Vite and Vue use Webpack to bundle stories instantly (in milliseconds).
-- Automatically find any stories inside the `stories/` folder.
+- Automatically find any stories inside the `src/stories/` folder.
 - Support using module path aliases like `@react-ui` or `@vue-ui` for imports.
 - Write MDX for component documentation pages.
 
-For example, here's the included Story for our `Button` component:
+For example, here's the included Story for our React `Button` component:
 
-```js:apps/docs/stories/button.stories.mdx
-import { Button } from '@react-ui';
-import { Meta, Story, Preview, Props } from '@storybook/addon-docs/blocks';
+```ts
+// apps/storybook-react/src/stories/Button.stories.ts
 
-<Meta title="Components/Button" component={Button} />
+import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
+import { Button } from "@narcecl/react";
 
-# Button
+export default {
+    title: "UI/Button",
+    component: Button,
+    parameters: {
+        layout: "centered",
+    },
+    tags: ["autodocs"],
+        argTypes: {
+    },
+    args: { onClick: fn() },
+} satisfies Meta<typeof Button>;
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur tempor, nisl nunc egestas nisi, euismod aliquam nisl nunc euismod.
+type Story = StoryObj<typeof Button>;
 
-## Props
-
-<Props of={Box} />
-
-## Examples
-
-<Preview>
-  <Story name="Default">
-    <Button>Hello</Button>
-  </Story>
-</Preview>
+export const Primary: Story = {
+    args: {
+        label: "This is a React Button",
+    },
+};
 ```
-
-This example includes a few helpful Storybook scripts:
-
-- `yarn dev`: Starts Storybook in dev mode with hot reloading at `localhost:6006`
-- `yarn build`: Builds the Storybook UI and generates the static HTML files
-- `yarn preview-storybook`: Starts a local server to view the generated Storybook UI
 
 ## Versioning & Publishing Packages
 
