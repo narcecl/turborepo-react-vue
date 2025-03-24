@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
       "outputs": [
         "dist/**",
@@ -8,19 +8,23 @@
       ],
       "dependsOn": [
         "^build"
-      ]
+      ],
+      "cache": true
     },
     "test": {
       "outputs": [
         "coverage/**"
       ],
-      "dependsOn": []
+      "dependsOn": [],
+      "cache": true
     },
     "lint": {
-      "outputs": []
+      "outputs": [],
+      "cache": true
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "clean": {
       "cache": false

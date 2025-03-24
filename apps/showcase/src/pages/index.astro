@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ReactComponents from '../components/ReactComponents';
+import VueComponents from '../components/VueComponents.vue';
+---
+
+<Layout> 
+	<div class="flex flex-col gap-3 justify-center align-middle h-full">
+		<ReactComponents client:only="react" />
+		<VueComponents client:only="vue" />
+	</div>
+</Layout>

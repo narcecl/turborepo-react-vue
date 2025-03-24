@@ -1,28 +1,42 @@
 {
-  "name": "react-ui",
-  "version": "1.0.0",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "sideEffects": false,
-  "description": "A React Design system for Web.",
-  "author": {
-    "name": "Nicolás Arce"
-  },
-  "license": "MIT",
-  "scripts": {
-    "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
-    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
-    "lint": "TIMING=1 eslint src/**/*.ts* --fix",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.37",
-    "@types/react-dom": "^17.0.11",
-    "eslint": "^8.25.0",
-    "react": "^17.0.2",
-    "tsconfig": "*",
-    "typescript": "^4.5.2",
-    "tsup": "^6.2.3"
-  }
+    "name": "@narcecl/react",
+    "version": "1.0.0",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "sideEffects": false,
+    "description": "A React Design system for Web.",
+    "author": {
+        "name": "Nicolás Arce <hola@narce.cl>"
+    },
+    "type": "module",
+    "license": "MIT",
+    "scripts": {
+        "build": "rollup -c --bundleConfigAsCjs",
+        "dev": "rollup -c --bundleConfigAsCjs --watch --max-old-space-size=8192",
+        "lint": "TIMING=1 eslint src/**/*.ts* --fix",
+        "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^28.0.3",
+        "@rollup/plugin-image": "^3.0.3",
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^16.0.1",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@types/react-dom": "^19.0.4",
+        "@types/react": "^19.0.12",
+        "classnames": "^2.5.1",
+        "react-dom": "^19.0.0",
+        "react": "^19.0.0",
+        "rollup-plugin-dts": "^6.2.0",
+        "rollup-plugin-peer-deps-external": "^2.2.4",
+        "rollup-plugin-postcss": "^4.0.2",
+        "rollup-plugin-typescript-paths": "^1.5.0",
+        "rollup": "^4.36.0",
+        "sass": "^1.86.0",
+        "tsconfig": "7.0.0",
+        "tslib": "^2.8.1",
+        "typescript": "^5.8.2"
+    }
 }

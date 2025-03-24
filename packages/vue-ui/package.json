@@ -1,34 +1,31 @@
 {
-  "name": "vue-ui",
-  "private": false,
-  "version": "1.0.0",
-  "description": "A Vue.js Design system for Web.",
-  "author": {
-    "name": "Nicolás Arce"
-  },
-  "main": "./dist/vue_ui.common.js",
-  "license": "MIT",
-  "scripts": {
-    "build": "vue-cli-service build --target lib --inline-vue --name vue_ui src/index.js",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
-  },
-  "dependencies": {
-    "core-js": "^3.8.3",
-    "vue": "^2.6.11"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.10.4",
-    "@vue/test-utils": "^1.1.1",
-    "css-loader": "^4.3.0",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-vue": "^9.6.0",
-    "node-sass": "^4.13.0",
-    "sass-loader": "^10.0.2",
-    "stylelint": "^13.7.1",
-    "stylelint-config-prettier": "^8.0.1",
-    "stylelint-order": "^4.0.0",
-    "vue-jest": "^3.0.7"
-  }
+    "name": "@narcecl/vue",
+    "version": "1.0.0",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist/style.css"
+    ],
+    "sideEffects": false,
+    "description": "A React Design system for Web.",
+    "author": {
+        "name": "Nicolás Arce <hola@narce.cl>"
+    },
+    "type": "module",
+    "license": "MIT",
+    "scripts": {
+        "build": "rm -rf dist && vite build",
+        "dev": "vite build --watch",
+        "cleanup": "rm -rf .turbo node_modules dist package-lock.json"
+    },
+    "peerDependencies": {
+        "vue": "^3.5.13"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^5.2.3",
+        "eslint": "^9.23.0",
+        "vite": "^6.2.2",
+        "vite-plugin-dts": "^4.5.3"
+    }
 }
